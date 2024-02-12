@@ -13,19 +13,34 @@
 
 char *get_next_line(int fd)
 {
-	char	*buf;
+    static char remain[BUFFER_SIZE];
+    static size_t remain_index;
+    char *newline_position;
 
-	buf = ft_calloc(BUFFER_SIZE, sizeof(char))
-
-	read(fd, buf);
+	remain_index = 0;
+    if (remain_index == 0)
+    {
+        int size = read(fd, remain, BUFFER_SIZE);
+    }
 
 }
 
 int main()
-{
-	fd = open("./test");
+{	int	fd;
+	char *line;
+
+	fd = open("./test", O_RDONLY);
 	if (fd == -1)
-	{
-		/*error*/
-	}
+    {
+        perror("Error opening file");
+        return 1;
+    }
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        printf("Line: %s\n", line);
+        free(line);
+    }
+
+    close(fd);
+    return 0;
 }
