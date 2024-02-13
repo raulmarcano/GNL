@@ -6,10 +6,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <limits.h>
 
 	//Define standar buffer_size
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE   1024
+#  define BUFFER_SIZE   1
 # endif
 
 char	*get_next_line(int fd);
