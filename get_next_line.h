@@ -8,16 +8,19 @@
 #include <unistd.h>
 #include <limits.h>
 
-	//Define standar buffer_size
+	// Define standar buffer_size
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE   20
+#  define BUFFER_SIZE   30
 # endif
 
-char	*get_next_line(int fd);
-void	*ft_calloc(size_t count, size_t size);
-char	*ft_strchr(const char *s, int c);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(const char *str);
-char 	*search_line_cpy(char *buf, char *remain);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strdup(const char *s1);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strchr(const char *s, int c);
+void	*ft_calloc(size_t count, size_t size);
+char	*read_n_buffer(char *buf, int fd);
+char 	*get_next_line(int fd);
+char	*line_cutter(char **s);
 
 #endif

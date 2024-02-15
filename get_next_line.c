@@ -11,80 +11,6 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE   10
-#endif
-
-size_t	ft_strlen(const char *str)
-{
-	size_t	i;
-	
-	i = 0;
-	while (str && str[i] != '\0')
-		i++;
-	return (i);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	size_t		size;
-	size_t		i;
-	char		*arr;
-
-	size = (ft_strlen(s1) + 1);
-	arr = malloc(size * sizeof(char));
-	i = 0;
-	if (!arr)
-		return (NULL);
-	while (i + 1 < size)
-	{
-		arr[i] = s1[i];
-		i++;
-	}
-	arr[i] = '\0';
-	return (arr);
-}
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*sub;
-	size_t	i;
-
-	if (!s)
-		return (NULL);
-	if (start > ft_strlen(s))
-		return (ft_strdup(""));
-	if (len > ft_strlen(s + start))
-		len = ft_strlen(s + start);
-	sub = (char *)(malloc(sizeof(char) * (len + 1)));
-	if (sub == NULL)
-		return (NULL);
-	i = 0;
-	while (i < len && s[start + i] != '\0')
-	{
-		sub[i] = s[start + i];
-		i++;
-	}
-	sub[i] = '\0';
-	return (sub);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		if (s[i] == (char)c)
-			return ((char *)(s + i));
-		i++;
-	}
-	if (s[i] == (char)c)
-		return ((char *)(s + i));
-	return (NULL);
-}
-
 void	*ft_calloc(size_t count, size_t size)
 {
 	char	*arr;
@@ -102,102 +28,76 @@ void	*ft_calloc(size_t count, size_t size)
 	return (arr);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	size_t	cat_len;
-	size_t	i;
-	size_t	j;
-	char	*cat;
 
-	cat_len = ((ft_strlen(s1)) + (ft_strlen(s2)) + 1);
-	cat = (char *)malloc(cat_len);
-	if (cat == NULL)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1 && s1[i] != '\0')
-	{
-		cat[i] = s1[i];
-		i++;
-	}
-	while (s2 && s2[j] != '\0')
-	{
-		cat[i] = s2[j];
-		i++;
-		j++;
-	}
-	cat[i] = '\0';
-	return (cat);
-}
-
-char	*read_n_buffer(char *stc, char *buf, int fd)
+char	*read_n_buffer(char *buf, int fd)
 {
 	int	size;
 	char *aux;
 
-	aux = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	size = 1;
+	aux = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!aux)
 		return NULL;
 
-	while (!ft_strchr(aux, '\n'))
+	while (!buf || (!ft_strchr(aux, '\n') && size != 0))
 	{
 		size = read(fd, aux, BUFFER_SIZE);
-		if (size <  0)
+		if (size < 0)
 		{
 			free(aux);
+			free(buf);
 			return NULL;
 		}
+		aux[size] = '\0';
 		buf = ft_strjoin(buf, aux);
 	}
-	if (stc)
-		buf = ft_strjoin(stc, buf);
-
-	free (stc);
 	free (aux);
 	return buf;
+}
+char	*line_cutter(char **s)
+{
+	char	*save;
+	char	*aux;
+	int		i;
+
+	i = 0;
+	aux = *s;
+	while (*s && (*s)[i] && (*s)[i] != '\n')
+		i++;
+	if ((*s) && (*s)[i] == '\n')
+		i++;
+	save = ft_substr(*s, 0, i);
+	*s = ft_substr(*s, i, ft_strlen((const char *)*s));
+	if (!*s)
+		free(*s);
+	free(aux);
+	if (!save[0])
+	{
+		free(save);
+		save = NULL;
+	}
+	return (save);
 }
 
 char *get_next_line(int fd)
 {
     static char *stc;
-    char    	*buf;
     char    	*line;
-	int  		i;
-	int 		j;
     
 	if (fd <  0 || BUFFER_SIZE <=  0 || BUFFER_SIZE == INT_MAX)
 		return (NULL);
-
-	if (!stc) 
-		stc = ft_calloc(BUFFER_SIZE +  1, sizeof(char));
-
-	buf = ft_calloc(BUFFER_SIZE +  1, sizeof(char));
-	if (!buf)
-		return (NULL);
-
-	buf = read_n_buffer(stc, buf, fd);
-	if (!buf || !buf[0])
+	stc = read_n_buffer(stc, fd);
+	if (!stc || !stc[0])
 	{
-		free(buf);
+		free(stc);
+		stc = NULL;
 		return (NULL);
 	}
+	line = line_cutter(&stc);
+	return (line);
 
-	i =  0;
-	while (buf[i] != '\n' && buf[i] != '\0')
-		i++;
-	line = ft_substr(buf,  0, i);
-	j = 0;
-	if (ft_strchr(stc, '\n'))
-	{
-		while (stc[j] != '\n')
-			j++;
-	}
-
-	// Concatenate the remaining part of the current buffer with stc
-	stc = ft_strjoin((stc + j), (buf + i + 1));
-	
-	return line;
 }
+
 
 int main()
 {	int	fd;
@@ -216,6 +116,6 @@ int main()
     }
 
     close(fd);
-	//system("leaks -q a.out");
+	system("leaks -q a.out");
     return 0;
 } 

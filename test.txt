@@ -1,7 +1,8 @@
 1234
 56789
-terceralinea
-cuartalinea
+terceraaa
+cuarta
 quinta
 sexta
-7ma
+7
+8
