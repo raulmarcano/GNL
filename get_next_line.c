@@ -28,17 +28,15 @@ void	*ft_calloc(size_t count, size_t size)
 	return (arr);
 }
 
-
 char	*read_n_buffer(char *buf, int fd)
 {
-	int	size;
-	char *aux;
+	int		size;
+	char	*aux;
 
 	size = 1;
 	aux = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!aux)
-		return NULL;
-
+		return (NULL);
 	while (!buf || (!ft_strchr(aux, '\n') && size != 0))
 	{
 		size = read(fd, aux, BUFFER_SIZE);
@@ -46,14 +44,15 @@ char	*read_n_buffer(char *buf, int fd)
 		{
 			free(aux);
 			free(buf);
-			return NULL;
+			return (NULL);
 		}
 		aux[size] = '\0';
 		buf = ft_strjoin(buf, aux);
 	}
 	free (aux);
-	return buf;
+	return (buf);
 }
+
 char	*line_cutter(char **s)
 {
 	char	*save;
@@ -79,12 +78,12 @@ char	*line_cutter(char **s)
 	return (save);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-    static char *stc;
-    char    	*line;
-    
-	if (fd <  0 || BUFFER_SIZE <=  0 || BUFFER_SIZE == INT_MAX)
+	static char	*stc;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE == INT_MAX)
 		return (NULL);
 	stc = read_n_buffer(stc, fd);
 	if (!stc || !stc[0])
@@ -95,7 +94,6 @@ char *get_next_line(int fd)
 	}
 	line = line_cutter(&stc);
 	return (line);
-
 }
 
 
