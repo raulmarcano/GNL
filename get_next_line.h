@@ -22,7 +22,7 @@
 
 	// Define standar buffer_size
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE   30
+#  define BUFFER_SIZE   10
 # endif
 
 size_t	ft_strlen(const char *str);
@@ -33,6 +33,6 @@ char	*ft_strchr(const char *s, int c);
 void	*ft_calloc(size_t count, size_t size);
 char	*read_n_buffer(char *buf, int fd);
 char	*get_next_line(int fd);
-char	*line_cutter(char **s);
+char	*line_cutter(char **stc);
 
 #endif

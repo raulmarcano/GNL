@@ -13,8 +13,8 @@
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	char	*arr;
-	int		i;
+	char		*arr;
+	size_t		i;
 
 	arr = malloc(count * size);
 	if (arr == NULL)
@@ -53,29 +53,28 @@ char	*read_n_buffer(char *buf, int fd)
 	return (buf);
 }
 
-char	*line_cutter(char **s)
+char	*line_cutter(char **stc)
 {
-	char	*save;
-	char	*aux;
+	char	*line;
+	char	*aux_freeing;
 	int		i;
 
 	i = 0;
-	aux = *s;
-	while (*s && (*s)[i] && (*s)[i] != '\n')
+	aux_freeing = *stc;
+	while (*stc && (*stc)[i] && (*stc)[i] != '\n')
 		i++;
-	if ((*s) && (*s)[i] == '\n')
+	if ((*stc) && (*stc)[i] == '\n')
 		i++;
-	save = ft_substr(*s, 0, i);
-	*s = ft_substr(*s, i, ft_strlen((const char *)*s));
-	if (!*s)
-		free(*s);
-	free(aux);
-	if (!save[0])
+	line = ft_substr(*stc, 0, i);
+	*stc = ft_substr(*stc, i, ft_strlen((const char *)*stc));
+	if (!*stc)
+		free(*stc);
+	if (!line[0])
 	{
-		free(save);
-		save = NULL;
+		free(line);
 	}
-	return (save);
+	free(aux_freeing);
+	return (line);
 }
 
 char	*get_next_line(int fd)
@@ -95,8 +94,7 @@ char	*get_next_line(int fd)
 	line = line_cutter(&stc);
 	return (line);
 }
-
-
+/*
 int main()
 {	int	fd;
 	char *line;
@@ -117,3 +115,4 @@ int main()
 	system("leaks -q a.out");
     return 0;
 } 
+*/
