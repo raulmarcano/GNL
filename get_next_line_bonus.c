@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarcano <rmarcano@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 17:46:44 by rmarcano          #+#    #+#             */
-/*   Updated: 2024/02/08 17:46:59 by rmarcano         ###   ########.fr       */
+/*   Created: 2024/02/19 17:27:51 by rmarcano          #+#    #+#             */
+/*   Updated: 2024/02/19 17:27:53 by rmarcano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	*ft_calloc(size_t count, size_t size)
 {
@@ -79,42 +79,65 @@ char	*line_cutter(char **stc)
 
 char	*get_next_line(int fd)
 {
-	static char	*stc;
+	static char	*stc[256];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE == INT_MAX)
 		return (NULL);
-	stc = read_n_buffer(stc, fd);
-	if (!stc || !stc[0])
+	stc[fd] = read_n_buffer(stc[fd], fd);
+	if (!stc[fd] || !stc[fd][0])
 	{
-		free(stc);
-		stc = NULL;
+		free(stc[fd]);
+		stc[fd] = NULL;
 		return (NULL);
 	}
-	line = line_cutter(&stc);
+	line = line_cutter(&stc[fd]);
 	return (line);
 }
 
-int main()
-{	int	fd;
-	char *line;
-	int num;
+/*
+int main() {
+    int fd[3];
+    char *line;
+    int i =  0;
+	int nlines[3] = {1,  1,  1};
+    int finished[3] = {0,  0,  0};
 
-	num = 1;
-	fd = open("./test.txt", O_RDONLY);
-	if (fd == -1)
-    {
+    fd[0] = open("./test.txt", O_RDONLY);
+    fd[1] = open("./test2.txt", O_RDONLY);
+    fd[2] = open("./test3.txt", O_RDONLY);
+    
+    if (fd[0] == -1 || fd[1] == -1 || fd[2] == -1) {
         perror("Error opening file");
-        return 1;
-    }
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        printf("Line %d: %s\n", num, line);
-        free(line);
-		num++;
+        return  1;
     }
 
-    close(fd);
-	system("leaks -q a.out");
+    while (1)
+	{
+        int current_fd = fd[i];
+        line = get_next_line(current_fd);
+        
+        if (line == NULL)
+		{
+            close(current_fd);
+            finished[i] =  1; // Marcar el archivo como leído completamente
+        } 
+		else 
+		{
+            printf("Line %d from fd %d: %s", nlines[i], current_fd, line);
+			nlines[i]++;
+            free(line);
+        }
+
+        i = (i +  1) % 3;
+
+        // Verificar si todos los archivos han sido leídos completamente
+        if (finished[0] && finished[1] && finished[2])
+		{
+            break;
+        }
+    }
+    //system("leaks -q a.out");
     return 0;
-} 
+}
+*/
