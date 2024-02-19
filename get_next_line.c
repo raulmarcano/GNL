@@ -63,10 +63,8 @@ char	*line_cutter(char **stc)
 	aux_freeing = *stc;
 	while (*stc && (*stc)[i] && (*stc)[i] != '\n')
 		i++;
-	if ((*stc) && (*stc)[i] == '\n')
-		i++;
-	line = ft_substr(*stc, 0, i);
-	*stc = ft_substr(*stc, i, ft_strlen((const char *)*stc));
+	line = ft_substr(*stc, 0, i + 1);
+	*stc = ft_substr(*stc, i + 1, ft_strlen((const char *)*stc));
 	if (!*stc)
 		free(*stc);
 	if (!line[0])
