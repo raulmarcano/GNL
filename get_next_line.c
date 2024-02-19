@@ -94,7 +94,7 @@ char	*get_next_line(int fd)
 	line = line_cutter(&stc);
 	return (line);
 }
-
+/*
 int main()
 {	int	fd;
 	char *line;
@@ -118,3 +118,4 @@ int main()
 	system("leaks -q a.out");
     return 0;
 } 
+*/
