@@ -77,7 +77,7 @@ char	*line_cutter(char **stc)
 
 char	*get_next_line(int fd)
 {
-	static char	*stc[256];
+	static char	*stc[OPEN_MAX];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE == INT_MAX)
