@@ -31,6 +31,10 @@ gcc -Wall -Wextra -Werror get_next_line_utils.c get_next_line.c -o executable_na
 - Handles dynamic memory allocation for variable-length lines.
 - Easily integrates into C projects for text file processing.
 
+## Bonus Features
 
+- Manages multiple file descriptors simultaneously using only one static variable.
+- Allows reading from different file descriptors without losing the reading thread of each.
+- Supports reading from various file descriptors in a sequential manner.
 
 
